@@ -5,11 +5,9 @@
 </template>
 
 <script>
-    export default {
-        name: "AppEmpty"
-    }
+export default {
+  name: 'AppEmpty',
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
