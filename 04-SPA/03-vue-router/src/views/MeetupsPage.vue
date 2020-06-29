@@ -47,13 +47,13 @@
 </template>
 
 <script>
-import MeetupsList from './MeetupsList';
-import MeetupsCalendar from './MeetupsCalendar';
-import PageTabs from './PageTabs';
-import FormCheck from './FormCheck';
-import AppEmpty from './AppEmpty';
-import { API_URL, fetchMeetups } from '../data';
-import AppIcon from './AppIcon';
+import MeetupsList from '@/components/MeetupsList';
+import MeetupsCalendar from '@/components/MeetupsCalendar';
+import PageTabs from '@/components/PageTabs';
+import FormCheck from '@/components/FormCheck';
+import AppEmpty from '@/components/AppEmpty';
+import { API_URL, fetchMeetups } from '@/data';
+import AppIcon from '@/components/AppIcon';
 
 export default {
   name: 'MeetupsPage',
