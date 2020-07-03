@@ -5,7 +5,7 @@
       <!--      <span>Загрузка...</span>-->
       <!--      <span>Удалить изображение</span>-->
       <span>Загрузить изображение</span>
-      <input type="file" accept="image/*" class="form-control-file" />
+      <input ref="file" type="file" accept="image/*" class="form-control-file" @change="fileSelected" />
     </label>
   </div>
 </template>
@@ -20,7 +20,9 @@ export default {
   },
 
   methods: {
-    fileSelected() {},
+    fileSelected() {
+      console.log(this.$refs.file.files[0]);
+    },
   },
 };
 </script>

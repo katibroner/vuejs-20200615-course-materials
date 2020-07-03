@@ -1,13 +1,13 @@
 <template>
-  <!--  button_block -->
-  <button class="button">
-    <slot></slot>
+  <button v-on="$listeners" v-bind="$attrs" class="button">
+    <slot />
   </button>
 </template>
 
 <script>
 export default {
   name: 'BaseButton',
+  inheritAttrs: false,
 };
 </script>
 
