@@ -1,14 +1,69 @@
 <template>
-  <!--  input-group_icon input-group_icon-left form-control_rounded form-control_sm -->
-  <div class="input-group">
-    <slot name="left-icon"></slot>
-    <input class="form-control" />
+  <div
+    class="input-group"
+    :class="{
+      'input-group_icon': hasIcon,
+      'input-group_icon-left': hasLeftIcon,
+    }"
+  >
+    <slot name="left-icon" />
+    <input
+      class="form-control"
+      v-bind="$attrs"
+      v-on="listeners"
+      :value="value"
+    />
   </div>
 </template>
 
 <script>
 export default {
   name: 'AppInput',
+  inheritAttrs: false,
+
+  props: {
+    value: {},
+  },
+
+  model: {
+    prop: 'value',
+    event: 'input',
+  },
+
+  data() {
+    return {
+      hasLeftIcon: false,
+    };
+  },
+
+  mounted() {
+    this.updateHasLeftIcon();
+  },
+
+  updated() {
+    this.updateHasLeftIcon();
+  },
+
+  computed: {
+    listeners() {
+      return {
+        ...this.$listeners,
+        input: $event => {
+          this.$emit('input', $event.target.value);
+        },
+      };
+    },
+
+    hasIcon() {
+      return this.hasLeftIcon;
+    },
+  },
+
+  methods: {
+    updateHasLeftIcon() {
+      this.hasLeftIcon = !!this.$slots['left-icon'];
+    },
+  },
 };
 </script>
 
