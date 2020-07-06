@@ -1,4 +1,4 @@
-# Meetups
+# 02-meetups-page-app
 
 ## Project setup
 ```
