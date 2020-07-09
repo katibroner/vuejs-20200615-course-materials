@@ -16,9 +16,13 @@ export default {
   },
 
   computed: {
-    user() {},
+    user() {
+      return this.$root.user;
+    },
 
-    isAuthenticated() {},
+    isAuthenticated() {
+      return this.$root.isAuthenticated;
+    },
   },
 };
 </script>

@@ -24,11 +24,15 @@ export default {
   },
 
   computed: {
-    isAuthenticated() {},
+    isAuthenticated() {
+      return this.$root.isAuthenticated;
+    },
   },
 
   methods: {
-    submit() {},
+    submit() {
+      this.$root.login(this.email, this.password).catch(err => alert(err));
+    },
   },
 };
 </script>

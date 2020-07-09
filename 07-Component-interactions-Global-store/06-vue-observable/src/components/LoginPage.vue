@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { AuthStore } from '../store/auth';
+
 export default {
   name: 'LoginPage',
 
@@ -24,11 +26,17 @@ export default {
   },
 
   computed: {
-    isAuthenticated() {},
+    isAuthenticated() {
+      return AuthStore.getters.isAuthenticated;
+    },
   },
 
   methods: {
-    submit() {},
+    submit() {
+      AuthStore.actions
+        .login(this.email, this.password)
+        .catch(err => alert(err));
+    },
   },
 };
 </script>

@@ -1,6 +1,8 @@
 <template>
   <div class="wrapper page container">
-    <!--<app-toast />-->
+    <app-toast ref="rootToaster" />
+    <app-toast ref="busToaster" />
+    <app-toast ref="emitterToaster" />
     <sample-page />
   </div>
 </template>
@@ -17,6 +19,20 @@ export default {
   components: {
     SamplePage,
     AppToast,
+  },
+
+  mounted() {
+    this.$root.$on('toaster:success', message => {
+      this.$refs.rootToaster.success(message);
+    });
+
+    ToastEventBus.$on('success', message => {
+      this.$refs.busToaster.success(message);
+    });
+
+    ToastEmitter.on('success', message => {
+      this.$refs.emitterToaster.success(message);
+    });
   },
 };
 </script>

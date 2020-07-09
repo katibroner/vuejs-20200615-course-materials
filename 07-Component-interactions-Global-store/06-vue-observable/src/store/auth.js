@@ -1,27 +1,23 @@
 import Vue from 'vue';
-import App from './App.vue';
-import '@/assets/styles/index.css';
 
-Vue.config.productionTip = false;
+export const AuthStore = {
+  state: Vue.observable({
+    user: null,
+  }),
 
-new Vue({
-  data() {
-    return {
-      user: null,
-    };
-  },
-
-  computed: {
+  getters: {
     isAuthenticated() {
-      return !!this.user;
+      return !!AuthStore.state.user;
     },
   },
 
-  methods: {
+  mutations: {
     setUser(user) {
-      this.user = user;
+      AuthStore.state.user = user;
     },
+  },
 
+  actions: {
     login(email, password) {
       return fetch(`${process.env.VUE_APP_API_URL}/auth/login`, {
         method: 'POST',
@@ -43,9 +39,7 @@ new Vue({
             });
           }
         })
-        .then(user => this.setUser(user));
+        .then(user => AuthStore.mutations.setUser(user));
     },
   },
-
-  render: h => h(App),
-}).$mount('#app');
+};
