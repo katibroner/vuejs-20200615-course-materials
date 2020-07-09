@@ -7,6 +7,7 @@
 
 <script>
 import LoginPage from './components/LoginPage';
+import { AuthStore } from './store/auth';
 
 export default {
   name: 'App',
@@ -16,9 +17,13 @@ export default {
   },
 
   computed: {
-    user() {},
+    user() {
+      return AuthStore.state.user;
+    },
 
-    isAuthenticated() {},
+    isAuthenticated() {
+      return AuthStore.getters.isAuthenticated();
+    },
   },
 };
 </script>

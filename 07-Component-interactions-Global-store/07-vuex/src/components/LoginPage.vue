@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'LoginPage',
@@ -24,10 +25,22 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    ...mapGetters('auth', {
+      isAuthenticated: 'isAuthenticated',
+    }),
+  },
 
   methods: {
-    submit() {},
+    ...mapActions('auth', {
+      login: 'login',
+    }),
+
+    submit() {
+      this.login({ email: this.email, password: this.password }).catch(err =>
+        alert(err),
+      );
+    },
   },
 };
 </script>

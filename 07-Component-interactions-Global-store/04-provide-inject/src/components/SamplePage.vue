@@ -8,8 +8,12 @@
 export default {
   name: 'SamplePage',
 
+  inject: ['toaster', 'config'],
+
   methods: {
-    injectedToast() {},
+    injectedToast() {
+      this.toaster.success(this.config.API_URL);
+    },
   },
 };
 </script>
