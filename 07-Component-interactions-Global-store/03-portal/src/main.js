@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
+import PortalVue from 'portal-vue';
+Vue.use(PortalVue);
 
 import '@/assets/styles/index.css';
 

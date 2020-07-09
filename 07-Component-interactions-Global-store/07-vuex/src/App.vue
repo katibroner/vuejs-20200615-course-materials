@@ -7,12 +7,23 @@
 
 <script>
 import LoginPage from './components/LoginPage';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'App',
 
   components: {
     LoginPage,
+  },
+
+  computed: {
+    ...mapState({
+      user: state => state.auth.user,
+    }),
+
+    ...mapGetters('auth', {
+      isAuthenticated: 'isAuthenticated',
+    }),
   },
 };
 </script>
