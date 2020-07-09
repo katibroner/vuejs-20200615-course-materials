@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper page container">
     <sample-page />
+    <portal-target name="root-end" multiple></portal-target>
   </div>
 </template>
 

@@ -1,7 +1,9 @@
 <template>
   <div class="simple-card">
     <button @click="localToast">localToast</button>
-    <app-toast ref="localToaster" />
+    <portal to="root-end">
+      <app-toast ref="localToaster" />
+    </portal>
   </div>
 </template>
 
@@ -13,8 +15,26 @@ export default {
 
   components: { AppToast },
 
+  data() {
+    return {
+      localToaster: null,
+    };
+  },
+
+  mounted() {
+    // Known Caveats | $refs
+    // https://portal-vue.linusb.org/guide/caveats.html#refs
+    this.$nextTick(() => {
+      this.$nextTick(() => {
+        this.localToaster = this.$refs.localToaster;
+      });
+    });
+  },
+
   methods: {
-    localToast() {},
+    localToast() {
+      this.localToaster.success('Local Toast');
+    },
   },
 };
 </script>
