@@ -14,15 +14,32 @@ const VInputButton = {
   props: ['text'],
 };
 
+const withLogger = (WrappedComponent) => ({
+  template: `<wrapped-component @click="clickHandler" v-on="$listeners" v-bind="$attrs"><slot /></wrapped-component>`,
+
+  components: {
+    WrappedComponent,
+  },
+
+  methods: {
+    clickHandler() {
+      console.log('Button was clicked');
+    },
+  }
+});
+
+const VLoggerButton = withLogger(VButton);
+const VLoggerInputButton = withLogger(VInputButton);
+
 const App = {
   template: `<div>
-  <p><v-button @click="clickHandler">{{ count }}</v-button></p>
-  <p><v-input-button @click="clickHandler" :text="count"/></p>
+  <p><v-logger-button @click="clickHandler">{{ count }}</v-logger-button></p>
+  <p><v-logger-input-button @click="clickHandler" :text="count"/></p>
 </div>`,
 
   components: {
-    VButton,
-    VInputButton,
+    VLoggerButton,
+    VLoggerInputButton,
   },
 
   data() {
