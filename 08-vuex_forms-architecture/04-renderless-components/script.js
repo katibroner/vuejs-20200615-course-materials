@@ -1,16 +1,6 @@
 import Vue from '/vendor/vue.esm.browser.js';
 
-const ListView = {
-  template: `<ul>
-  <li v-for="(item, idx) in items">
-    <slot :item="item">
-        <span>{{ item }}</span>
-    </slot>
-    <slot name="remove-button" :remove="removeHandler">
-      <button @click="removeHandler(idx)">x</button>
-    </slot>
-  </li>
-</ul>`,
+const RenderlessListView = {
   props: {
     items: Array,
   },
@@ -20,28 +10,124 @@ const ListView = {
     event: 'change',
   },
 
-  methods: {
-    removeHandler(idx) {
-      this.items.splice(idx, 1);
-      this.$emit('change', [...this.items]);
+  data() {
+    return {
+      items_: null,
+      newItem: '',
+    };
+  },
+
+  watch: {
+    items: {
+      immediate: true,
+      deep: true,
+      handler(newValue) {
+        this.items_ = newValue;
+      },
     },
+  },
+
+  methods: {
+    setNewItem(value) {
+      this.newItem = value;
+    },
+
+    insert() {
+      if (this.newItem) {
+        this.items_.push(this.newItem);
+        this.$emit('change', [...this.items_]);
+        this.newItem = '';
+      }
+    },
+
+    remove(idx) {
+      this.items_.splice(idx, 1);
+      this.$emit('change', [...this.items_]);
+    },
+  },
+
+  render(h) {
+    return this.$scopedSlots.default({
+      items: this.items,
+      newItem: this.newItem,
+      methods: {
+        insert: this.insert,
+        setNewItem: this.setNewItem,
+        remove: this.remove,
+      },
+    });
+  },
+};
+
+
+const UlListView = {
+  template: `<renderless-list-view :items="list" @change="$emit('change', $event)">
+  <template #default="{ methods, items, newItem }">
+    <div>
+      <form @submit.prevent="methods.insert">
+        <input :value="newItem" @input="methods.setNewItem($event.target.value)" placeholder="New"> <button>+</button>
+      </form>
+      <ul>
+        <li v-for="(item, idx) in items">
+          <span>{{ item }}</span>
+          <button @click="methods.remove(idx)">x</button>
+        </li>
+      </ul>
+    </div>
+  </template>
+</renderless-list-view>`,
+
+  components: {
+    RenderlessListView,
+  },
+
+  props: {
+    list: Array,
+  },
+
+  model: {
+    prop: 'list',
+    event: 'change',
+  },
+};
+
+const LinkListView = {
+  template: `<renderless-list-view :items="list" @change="$emit('change', $event)">
+  <template #default="{ methods, items }">
+    <div>
+      <div>
+        <a v-for="(item, idx) in items" href="#" @click="methods.remove(idx)">
+          {{ item }}
+        </a>
+      </div>
+    </div>
+  </template>
+</renderless-list-view>`,
+
+  components: {
+    RenderlessListView,
+  },
+
+  props: {
+    list: Array,
+  },
+
+  model: {
+    prop: 'list',
+    event: 'change',
   },
 };
 
 const App = {
   template: `<div>
-  <list-view v-model="list">
-    <template #default="scope">
-      <b>{{ scope.item }}</b>
-    </template>
-    <template #remove-button="scope">
-      <a href="#" @click="scope.remove">Delete</a>
-    </template>
-  </list-view>
+  <ul-list-view v-model="list" />
+  <hr>
+  <link-list-view v-model="list" />
 </div>`,
 
   components: {
-    ListView,
+    UlListView,
+    LinkListView,
   },
 
   data() {
