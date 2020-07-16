@@ -1,46 +1,50 @@
 <template>
   <div class="wrapper page container">
-    <meetup-form :meetup="meetup" @submit="meetup = $event" />
-    <hr />
-    <button @click="updateMeetup">Update Meetup</button>
+    <meetup-form v-if="meetups[this.meetupId]" :meetup-id="this.meetupId" />
+    <hr>
     <pre><code>{{ meetup }}</code></pre>
   </div>
 </template>
 
 <script>
 import MeetupForm from './components/MeetupForm';
-
-function buildMeetup() {
-  return {
-    id: null,
-    title: '',
-    description: '',
-    imageId: null,
-    date: new Date(),
-    place: '',
-    agenda: [],
-  };
-}
+import { mapState } from 'vuex';
 
 export default {
-  name: 'SamplePage',
+  name: 'App',
 
   components: {
     MeetupForm,
   },
 
+  mounted() {
+    this.$store.commit('forms/SET_MEETUP', {
+      meetupId: 1,
+      meetup: {
+        id: null,
+        title: '',
+        description: '',
+        imageId: null,
+        date: new Date(),
+        place: '',
+        agenda: [],
+      },
+    });
+  },
+
   data() {
     return {
-      meetup: buildMeetup(),
+      meetupId: 1,
     };
   },
 
-  methods: {
-    updateMeetup() {
-      this.meetup.title += '!';
-      if (this.meetup.agenda.length) {
-        this.meetup.agenda[0].title += '!';
-      }
+  computed: {
+    ...mapState({
+      meetups: state => state.forms.meetups,
+    }),
+
+    meetup() {
+      return this.meetups[this.meetupId];
     },
   },
 };

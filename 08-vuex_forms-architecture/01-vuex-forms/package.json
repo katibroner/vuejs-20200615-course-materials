@@ -1,5 +1,5 @@
 {
-  "name": "03-one-way-watch-sync",
+  "name": "01-vuex-forms",
   "version": "0.1.0",
   "private": true,
   "scripts": {
