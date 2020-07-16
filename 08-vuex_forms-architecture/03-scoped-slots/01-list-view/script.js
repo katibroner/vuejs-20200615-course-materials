@@ -1,12 +1,17 @@
 import Vue from '/vendor/vue.esm.browser.js';
 
 const ListView = {
-  template: `<ul>
-  <li v-for="(item, idx) in items">
-    <span>{{ item }}</span>
-    <button @click="removeHandler(idx)">x</button>
-  </li>
-</ul>`,
+  template: `<div>
+  <form @submit.prevent="insert">
+    <input v-model="newItem" placeholder="New"> <button>+</button>
+  </form>
+  <ul>
+    <li v-for="(item, index) in items_">
+      <span>{{ item }}</span>
+      <button @click="remove(index)">x</button>
+    </li>
+  </ul>
+</div>`,
   props: {
     items: Array,
   },
@@ -16,10 +21,35 @@ const ListView = {
     event: 'change',
   },
 
+  data() {
+    return {
+      items_: null,
+      newItem: '',
+    };
+  },
+
+  watch: {
+    items: {
+      immediate: true,
+      deep: true,
+      handler(newValue) {
+        this.items_ = newValue;
+      },
+    },
+  },
+
   methods: {
-    removeHandler(idx) {
-      this.items.splice(idx, 1)
-      this.$emit('change', [...this.items]);
+    insert() {
+      if (this.newItem) {
+        this.items_.push(this.newItem);
+        this.$emit('change', [...this.items_]);
+        this.newItem = '';
+      }
+    },
+
+    remove(idx) {
+      this.items_.splice(idx, 1);
+      this.$emit('change', [...this.items_]);
     },
   },
 };

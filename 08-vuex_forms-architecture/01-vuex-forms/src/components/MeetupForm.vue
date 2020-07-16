@@ -4,21 +4,20 @@
       <fieldset class="form-section">
         <div class="form-group">
           <label class="form-label">Название</label>
-          <input class="form-control" v-model="meetup_.title" />
+          <input class="form-control" v-model="title" />
         </div>
         <div class="form-group">
           <label class="form-label">Место проведения</label>
-          <input class="form-control" v-model="meetup_.place" />
+          <input class="form-control" v-model="place" />
         </div>
       </fieldset>
 
       <h3 class="form__section-title">Программа</h3>
       <meetup-agenda-item-form
-        v-for="(agendaItem, idx) in meetup_.agenda"
+        v-for="(agendaItem, idx) in meetup.agenda"
         :key="agendaItem.id"
-        :agenda-item="agendaItem"
-        @change="updateAgendaItem(idx, $event)"
-        @remove="removeAgendaItem(idx)"
+        :meetup-id="meetupId"
+        :index="idx"
         class="mb-3"
       />
 
@@ -44,20 +43,22 @@
 
 <script>
 import MeetupAgendaItemForm from './MeetupAgendaItemForm';
-import { deepClone } from '@/utils';
+import { mapMutations, mapState } from 'vuex';
 
-function buildAgendaItem() {
+const mapField = (field) => {
   return {
-    id: Math.random(),
-    startsAt: '00:00',
-    endsAt: '00:00',
-    type: 'other',
-    title: null,
-    description: null,
-    speaker: null,
-    language: null,
+    get() {
+      return this.meetup[field];
+    },
+    set(value) {
+      this.setMeetupField({
+        meetupId: this.meetupId,
+        field,
+        value,
+      });
+    },
   };
-}
+};
 
 export default {
   name: 'MeetupForm',
@@ -67,34 +68,38 @@ export default {
   },
 
   props: {
-    meetup: {
-      type: Object,
-      required: true,
+    meetupId: {
+      type: Number,
+      default: null,
     },
   },
 
-  data() {
-    return {
-      meetup_: deepClone(this.meetup),
-    };
+  computed: {
+    ...mapState({
+      meetups: (state) => state.forms.meetups,
+    }),
+
+    meetup() {
+      return this.meetups[this.meetupId];
+    },
+
+    title: mapField('title'),
+    place: mapField('place'),
   },
 
   methods: {
+    ...mapMutations({
+      pushAgendaItem: 'forms/PUSH_AGENDA_ITEM',
+      setMeetupField: 'forms/SET_MEETUP_FIELD',
+      removeMeetupForm: 'forms/REMOVE_MEETUP',
+    }),
+
     addAgendaItem() {
-      const newItem = buildAgendaItem();
-      this.meetup_.agenda.push(newItem);
-    },
-
-    updateAgendaItem(idx, newItem) {
-      this.meetup_.agenda.splice(idx, 1, newItem);
-    },
-
-    removeAgendaItem(idx) {
-      this.meetup_.agenda.splice(idx, 1);
+      this.pushAgendaItem({ meetupId: this.meetupId });
     },
 
     onSubmit() {
-      this.$emit('submit', deepClone(this.meetup_));
+      this.$emit('submit');
     },
   },
 };
