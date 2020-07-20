@@ -1,6 +1,10 @@
 <template>
   <div class="form-check">
-    <div v-for="option in options" :key="option.value" class="form-check__group">
+    <div
+      v-for="option in options"
+      :key="option.value"
+      class="form-check__group"
+    >
       <input
         class="form-check__input"
         type="radio"
@@ -15,27 +19,24 @@
 </template>
 
 <script>
-    export default {
-        name: "FormCheck",
+export default {
+  name: 'FormCheck',
 
-      props: {
-        options: {
-          type: Array,
-          required: true,
+  props: {
+    options: {
+      type: Array,
+      required: true,
+    },
+    selected: {
+      type: String,
+    },
+  },
 
-        },
-        selected: {
-          type: String,
-        },
-      },
-
-      model: {
-        prop: 'selected',
-        event: 'change',
-      },
-    }
+  model: {
+    prop: 'selected',
+    event: 'change',
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
