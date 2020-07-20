@@ -5,9 +5,16 @@
     :class="{
       'input-group_icon': hasIcon,
       'input-group_icon-left': hasIcon,
-   }">
+    }"
+  >
     <slot name="left-icon"></slot>
-    <input class="form-control" v-bind="$attrs" :value="value" v-on="listeners" />
+    <input
+      class="form-control"
+      :class="{ 'form-control_sm': this.small }"
+      v-bind="$attrs"
+      :value="value"
+      v-on="listeners"
+    />
   </div>
 </template>
 
@@ -18,6 +25,7 @@ export default {
 
   props: {
     value: {},
+    small: Boolean,
   },
 
   data() {
@@ -39,12 +47,16 @@ export default {
     listeners() {
       return {
         ...this.$listeners,
-        input: ($event) => this.$emit('input', $event.target.value),
+        input: $event => this.$emit('input', $event.target.value),
       };
     },
   },
 
   methods: {
+    sum(a, b) {
+      return a + b;
+    },
+
     alert(text) {
       alert(text);
     },
