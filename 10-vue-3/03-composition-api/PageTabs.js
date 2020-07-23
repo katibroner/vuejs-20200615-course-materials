@@ -1,3 +1,5 @@
+import { defineComponent } from "/vendor/vue.esm-browser.js";
+
 const template = `
 <div class="page-tabs">
   <button type="button" class="page-tabs__tab"
@@ -23,16 +25,16 @@ const template = `
 </div>
 `;
 
-export const PageTabs = {
+export const PageTabs = defineComponent({
   template,
 
   props: {
-    selected: String,
+    selected: String
   },
 
   methods: {
     select(name) {
-      this.$emit('update:selected', name);
-    },
-  },
-};
+      this.$emit("update:selected", name);
+    }
+  }
+});

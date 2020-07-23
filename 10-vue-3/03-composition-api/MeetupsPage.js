@@ -1,16 +1,19 @@
-import meetups from '/data/meetups-data.js';
-import { MeetupsList } from './MeetupsList.js';
-import { MeetupsCalendar } from './MeetupsCalendar.js';
-import { PageTabs}  from './PageTabs.js';
-import { FormCheck } from './FormCheck.js';
-import { AppEmpty } from './AppEmpty.js';
+import { defineComponent } from "/vendor/vue.esm-browser.js";
+
+import { MeetupsList } from "./MeetupsList.js";
+import { MeetupsCalendar } from "./MeetupsCalendar.js";
+import { PageTabs } from "./PageTabs.js";
+import { FormCheck } from "./FormCheck.js";
+import { AppEmpty } from "./AppEmpty.js";
+import { useMeetupsFilters } from "./useMeetupsFilters";
+import { useMeetups } from "./useMeetups";
 
 const template = `
 <div class="container">
 
   <div class="filters-panel">
     <div class="filters-panel__col">
-      <form-check :options="dateFilterOptions" v-model="filter.date"></form-check>
+      <form-check :options="dateFilterOptions" v-model:selected="filter.date"></form-check>
     </div>
 
     <div class="filters-panel__col">
@@ -27,7 +30,7 @@ const template = `
         </div>
       </div>
       <div class="form-group form-group_inline">
-        <page-tabs :selected.sync="filter.view"></page-tabs>
+        <page-tabs v-model:selected="filter.view"></page-tabs>
       </div>
     </div>
   </div>
@@ -41,7 +44,7 @@ const template = `
 </div>
 `;
 
-export const MeetupsPage = {
+export const MeetupsPage = defineComponent({
   template,
 
   components: {
@@ -49,79 +52,14 @@ export const MeetupsPage = {
     MeetupsCalendar,
     PageTabs,
     FormCheck,
-    AppEmpty,
+    AppEmpty
   },
 
-  data(){
+  setup(props) {
+    const composedMeetups = useMeetups(props);
     return {
-      meetups: [],
-      filter: {
-        date: '',
-        participation: '',
-        search: '',
-        view: '',
-      },
-      dateFilterOptions: [
-        { text: 'Все', value: '' },
-        { text: 'Прошедшие', value: 'past' },
-        { text: 'Ожидаемые', value: 'future' },
-      ],
+      ...composedMeetups,
+      ...useMeetupsFilters(props, composedMeetups.meetups)
     };
-  },
-
-  async mounted() {
-    this.meetups = await this.fetchMeetups();
-  },
-
-  computed: {
-    processedMeetups() {
-      return this.meetups.map((meetup) => ({
-        ...meetup,
-        cover: meetup.imageId ? `https://course-vue.javascript.ru/api/images/${meetup.imageId}` : undefined,
-        date: new Date(meetup.date),
-        localeDate: new Date(meetup.date).toLocaleString(navigator.language, {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }),
-      }));
-    },
-
-    filteredMeetups() {
-      let filteredMeetups = this.processedMeetups;
-
-      if (this.filter.date === 'past') {
-        filteredMeetups = filteredMeetups.filter((meetup) => new Date(meetup.date) <= new Date());
-      } else if (this.filter.date === 'future') {
-        filteredMeetups = filteredMeetups.filter((meetup) => new Date(meetup.date) > new Date());
-      }
-
-      if (this.filter.participation === 'organizing') {
-        filteredMeetups = filteredMeetups.filter((meetup) => meetup.organizing);
-      } else if (this.filter.participation === 'attending') {
-        filteredMeetups = filteredMeetups.filter((meetup) => meetup.attending);
-      }
-
-      if (this.filter.search) {
-        const concatMeetupText = (meetup) =>
-          [meetup.title, meetup.description, meetup.place, meetup.organizer].join(' ').toLowerCase();
-        filteredMeetups = filteredMeetups.filter((meetup) =>
-          concatMeetupText(meetup).includes(this.filter.search.toLowerCase()),
-        );
-      }
-
-      return filteredMeetups;
-    },
-  },
-
-  methods: {
-    async fetchMeetups() {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(meetups);
-        }, 100);
-      });
-    },
-  },
-
-};
+  }
+});

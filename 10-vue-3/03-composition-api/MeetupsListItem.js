@@ -1,3 +1,5 @@
+import { defineComponent } from "/vendor/vue.esm-browser.js";
+
 const template = `
 <a :href="\`/meetups/\${meetup.id}\`" class="meetups-list__item">
   <div class="meetups-list__col">
@@ -28,13 +30,13 @@ const template = `
 </a>
 `;
 
-export const MeetupListItem = {
+export const MeetupListItem = defineComponent({
   template,
 
   props: {
     meetup: {
       required: true,
-      type: Object,
-    },
-  },
-};
+      type: Object
+    }
+  }
+});
