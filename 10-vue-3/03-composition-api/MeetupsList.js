@@ -1,4 +1,5 @@
-import { MeetupListItem } from './MeetupsListItem.js';
+import { defineComponent } from "/vendor/vue.esm-browser.js";
+import { MeetupListItem } from "./MeetupsListItem.js";
 
 const template = `
 <div class="meetups-list transition-list">
@@ -8,17 +9,17 @@ const template = `
 </div>
 `;
 
-export const MeetupsList = {
+export const MeetupsList = defineComponent({
   template,
 
   props: {
     meetups: {
       type: Array,
-      required: true,
-    },
+      required: true
+    }
   },
 
   components: {
-    MeetupListItem,
-  },
-};
+    MeetupListItem
+  }
+});

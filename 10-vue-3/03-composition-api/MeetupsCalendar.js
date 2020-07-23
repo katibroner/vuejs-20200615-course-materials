@@ -1,3 +1,5 @@
-export const MeetupsCalendar = {
-  template: `<div>Calendar</div>`,
-};
+import { defineComponent } from "/vendor/vue.esm-browser.js";
+
+export const MeetupsCalendar = defineComponent({
+  template: `<div>Calendar</div>`
+});
