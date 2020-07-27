@@ -1,7 +1,6 @@
 import Vue from '/vendor/vue.esm.browser.js';
-
-const deepEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-const deepClone = obj => JSON.parse(JSON.stringify(obj));
+import { localPropMixin } from './local-prop-mixin.js';
+import { windowSizeMixin } from './window-size-mixin.js';
 
 const UserForm = {
   template: `<form>
@@ -9,36 +8,7 @@ const UserForm = {
   <p>LastName: <input v-model="user_.lastName"></p>
 </form>`,
 
-  props: {
-    user: {
-      type: Object,
-    },
-  },
-
-  data() {
-    return {
-      user_: null,
-    };
-  },
-
-  watch: {
-    user: {
-      immediate: true,
-      deep: true,
-      handler(newValue) {
-        if (!deepEqual(this.user, this.user_)) {
-          this.user_ = deepClone(newValue);
-        }
-      },
-    },
-
-    user_: {
-      deep: true,
-      handler(newValue) {
-        this.$emit('update:user', deepClone(newValue));
-      },
-    },
-  },
+  mixins: [localPropMixin('user', { type: Object, required: true })],
 };
 
 const App = {
@@ -52,18 +22,8 @@ const App = {
 
   components: { UserForm },
 
-  mounted() {
-    this.$nextTick(function() {
-      window.addEventListener('resize', this.setWindowSize);
-      window.addEventListener('resize', this.setWindowSize);
-      this.setWindowSize();
-    });
-  },
-
   data() {
     return {
-      windowWidth: 0,
-      windowHeight: 0,
       user: {
         firstName: 'firstName',
         lastName: 'lastName',
@@ -71,23 +31,12 @@ const App = {
     };
   },
 
-  methods: {
-    setWindowSize() {
-      this.windowWidth = document.documentElement.clientWidth;
-      this.windowHeight = document.documentElement.clientHeight;
-    },
-  },
-
-  beforeDestroy() {
-    window.removeEventListener('resize', this.setWindowSize);
-    window.removeEventListener('resize', this.setWindowSize);
-  },
+  mixins: [windowSizeMixin],
 };
 
 // или зарегистрировать глобально
 // Vue.mixin('window-size-mixin', windowSizeMixin);
 
-// eslint-disable-next-line no-unused-vars
 const app = new Vue({
   render: h => h(App),
 }).$mount('#app');

@@ -1,9 +1,20 @@
 import Vue from '/vendor/vue.esm.browser.js';
+import { selectOnFocus } from './directives/select-on-focus.js';
 
 const App = {
   template: `<div>
-  <input value="Text Value" />
+  <input value="Text Value" @focus="selectOnFocus" />
+  <hr>
+  <input value="Text Value With Directive" v-select-on-focus />
 </div>`,
+
+  directives: { selectOnFocus },
+
+  methods: {
+    selectOnFocus($event) {
+      $event.currentTarget.setSelectionRange(0, -1);
+    },
+  },
 };
 
 // или зарегистрировать глобально

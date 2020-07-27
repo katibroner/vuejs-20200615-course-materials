@@ -1,4 +1,7 @@
 import Vue from '/vendor/vue.esm.browser.js';
+import { ToasterPlugin } from './ToasterPlugin.js';
+
+Vue.use(ToasterPlugin);
 
 const App = {
   template: `<div>
@@ -6,7 +9,9 @@ const App = {
 </div>`,
 
   methods: {
-    toast() {},
+    toast() {
+      this.$toaster.success('Toast!');
+    },
   },
 };
 
