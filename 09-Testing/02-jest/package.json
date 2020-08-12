@@ -1,0 +1,15 @@
+{
+  "name": "02-jest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sum.js",
+  "scripts": {
+    "test": "jest --"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^26.0.5",
+    "jest": "^26.1.0"
+  }
+}
